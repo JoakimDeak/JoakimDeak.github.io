@@ -1,7 +1,7 @@
 const ApiController = (function () {
 
     const getSpotifyToken = async () => {
-        const result = await fetch ('https://song-finder-x.herokuapp.com/api/spotify', {
+        const result = await fetch('https://song-finder-x.herokuapp.com/api/spotify', {
             method: 'GET'
         });
         const data = await result.json();
@@ -34,11 +34,19 @@ const ApiController = (function () {
                 let pagination = next.substring(next.lastIndexOf('?'), next.length);
                 data = await getTracks(token, id, pagination);
                 data.items.forEach(item => {
-                    tracks.push(item.track.name);
+                    tracks.push(formatTrackName(item.track.name));
                 });
             }
         });
         return tracks;
+    }
+
+    const formatTrackName = (trackName) => {
+        let dashIndex = trackName.indexOf('-');
+        if (dashIndex != -1 && trackName.charAt(dashIndex - 1) == " ") {
+            trackName = trackName.substring(0, dashIndex - 1);
+        }
+        return trackName;
     }
 
     const getTracks = async (token, playlistId, pagination) => {
@@ -60,11 +68,11 @@ const ApiController = (function () {
     }
 
     const _getAllSearchResults = async (searchTerm) => {
-        const result = await fetch ('https://song-finder-x.herokuapp.com/api/genius', {
+        const result = await fetch('https://song-finder-x.herokuapp.com/api/genius', {
             method: 'GET',
             headers: {
-                'Search-Term' : searchTerm
-            } 
+                'Search-Term': searchTerm
+            }
         });
         const data = await result.json();
         return data;
@@ -76,20 +84,18 @@ const ApiController = (function () {
         },
         getAllSearchResults(searchTerm) {
             return _getAllSearchResults(searchTerm, 0);
-        },
-        apiGenius(searchTerm){
-            return apiGenius(searchTerm);
         }
     }
 })();
 
-function buttonHandler(){
+function buttonHandler() {
     let id = document.getElementById("spotifyId").value;
     let lyric = document.getElementById("lyric").value;
-    findIntersection(id, lyric);
+    findSong(id, lyric);
 }
 
-const findIntersection = async (userId, lyric) => {
+const findSong = async (userId, lyric) => {
+    clearResult();
     document.getElementById("loading").innerHTML = "Waiting on spotify";
     let playlistTracks = await ApiController.getAllTracksFromUser(userId);
 
@@ -98,13 +104,42 @@ const findIntersection = async (userId, lyric) => {
 
     let intersection = [];
     document.getElementById("loading").innerHTML = "Processing results";
-    for (let i = 0; i < searchResults.length; i++) {
-        if (playlistTracks.includes(searchResults[i]) && !intersection.includes(searchResults[i])) {
-            intersection.push(searchResults[i]);
+    for (let i = 0; i < playlistTracks.length; i++){
+        if(searchResults.includes(ignoreSymbols(playlistTracks[i])) && !intersection.includes(playlistTracks[i])){
+            intersection.unshift(playlistTracks[i]);
         }
     }
-    document.getElementById("loading").innerHTML = "Done";
-    document.getElementById("result").innerHTML = intersection[0];
+    document.getElementById("loading").innerHTML = "Possible results";
+    displayResult(intersection);
+    
+}
 
-    intersection.forEach(song => console.log(song));
+const displayResult = (results) => {
+    results.forEach(song => {
+        let result = document.createElement('P');
+        result.innerText = song;
+        result.className = "result";
+        document.body.appendChild(result);
+    });
+}
+
+const clearResult = () => {
+    let resultElements = document.querySelectorAll("p.result");
+    if(resultElements.length > 0){
+        for(let element of resultElements){
+            element.remove();
+        }
+    }
+}
+
+const ignoreSymbols = (trackName) => {
+    let lastIndex = trackName.indexOf(')');
+    if(lastIndex != -1){
+        let res = trackName.substring(trackName.indexOf('(') - 1, lastIndex + 1);
+        trackName = trackName.replace(res, "");
+        if(trackName.charAt(0) == " "){
+            trackName = trackName.substring(1, trackName.length + 1);
+        }
+    }
+    return trackName;
 }
