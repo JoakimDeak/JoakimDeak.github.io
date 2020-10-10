@@ -106,7 +106,7 @@ const findSong = async (userId, lyric) => {
     document.getElementById("loading").innerHTML = "Processing results";
     for (let i = 0; i < playlistTracks.length; i++){
         if(searchResults.includes(ignoreSymbols(playlistTracks[i])) && !intersection.includes(playlistTracks[i])){
-            intersection.unshift(playlistTracks[i]);
+            intersection.push(playlistTracks[i]);
         }
     }
     document.getElementById("loading").innerHTML = "Possible results";
