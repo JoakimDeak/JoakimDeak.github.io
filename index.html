@@ -2,18 +2,23 @@
 <HTML>
     <head>
         <title>
-            LyricsProject
+            Song Finder X
         </title>
         <meta charset="utf-8"/>
     </head>
     <body>
-
-        <label for="spotifyId">Spotify Username</label><br>
-        <input type="text" id="spotifyId" name="spotifyId"><br>
-        <label for="lyric">Lyric</label><br>
-        <input type="text" id="lyric" name="lyric"><br>
-        <button onclick="buttonHandler()">Search</button>
-
+        <div id="formDiv">
+            <form id="inputForm"></form>
+                <label for="spotifyId">Spotify Username</label><br>
+                <input type="text" id="spotifyId" name="spotifyId" autocomplete="off"><br>
+                <label for="lyric">Lyric</label><br>
+                <input type="text" id="lyric" name="lyric" autocomplete="off"><br>
+                <input type="submit" value="Search" onclick="buttonHandler()">
+            </form>
+        </div>
+        <p id="loading"></p>
+        <p id="result"></p>
+        
         <script src="main.js" type="text/javascript"></script>
     </body>
 </HTML>

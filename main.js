@@ -90,19 +90,21 @@ function buttonHandler(){
 }
 
 const findIntersection = async (userId, lyric) => {
-    console.log("Starting spotify scan");
+    document.getElementById("loading").innerHTML = "Waiting on spotify";
     let playlistTracks = await ApiController.getAllTracksFromUser(userId);
 
-    console.log("Starting genius search");
+    document.getElementById("loading").innerHTML = "Waiting on genius";
     let searchResults = await ApiController.getAllSearchResults(lyric);
 
     let intersection = [];
-    console.log("Starting processing");
+    document.getElementById("loading").innerHTML = "Processing results";
     for (let i = 0; i < searchResults.length; i++) {
         if (playlistTracks.includes(searchResults[i]) && !intersection.includes(searchResults[i])) {
             intersection.push(searchResults[i]);
         }
     }
-    console.log("done, possible matches:");
+    document.getElementById("loading").innerHTML = "Done";
+    document.getElementById("result").innerHTML = intersection[0];
+
     intersection.forEach(song => console.log(song));
 }
