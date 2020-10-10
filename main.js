@@ -60,7 +60,7 @@ const ApiController = (function () {
     }
 
     const _getAllSearchResults = async (searchTerm) => {
-        const result = await fetch ('http://song-finder-x.herokuapp.com/api/genius', {
+        const result = await fetch ('https://song-finder-x.herokuapp.com/api/genius', {
             method: 'GET',
             headers: {
                 'Search-Term' : searchTerm
