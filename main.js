@@ -1,7 +1,7 @@
 const ApiController = (function () {
 
     const getSpotifyToken = async () => {
-        const result = await fetch ('http://song-finder-x.herokuapp.com/api/spotify', {
+        const result = await fetch ('https://song-finder-x.herokuapp.com/api/spotify', {
             method: 'GET'
         });
         const data = await result.json();
