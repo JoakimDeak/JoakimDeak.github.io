@@ -1,7 +1,7 @@
 const ApiController = (function () {
 
     const getSpotifyToken = async () => {
-        const result = await fetch('https://song-finder-x.herokuapp.com/api/spotify', {
+        const result = await fetch('https://song-finder-server.herokuapp.com/api/spotify', {
             method: 'GET'
         });
         const data = await result.json();
@@ -68,7 +68,7 @@ const ApiController = (function () {
     }
 
     const _getAllSearchResults = async (searchTerm) => {
-        const result = await fetch('https://song-finder-x.herokuapp.com/api/genius', {
+        const result = await fetch('https://song-finder-server.herokuapp.com/api/genius', {
             method: 'GET',
             headers: {
                 'Search-Term': searchTerm
